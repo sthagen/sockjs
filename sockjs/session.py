@@ -20,7 +20,7 @@ log = logging.getLogger("sockjs")
 
 
 class Session(object):
-    """ SockJS session object
+    """SockJS session object
 
     ``state``: Session state
 
@@ -142,6 +142,7 @@ class Session(object):
 
         if self._queue:
             frame, payload = self._queue.popleft()
+            self._tick()
             if pack:
                 if frame == FRAME_CLOSE:
                     return FRAME_CLOSE, close_frame(*payload)

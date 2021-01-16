@@ -1,8 +1,8 @@
 SockJS server based on Asyncio (PEP 3156)
 =========================================
 
-.. image :: https://secure.travis-ci.org/aio-libs/sockjs.svg
-  :target:  https://secure.travis-ci.org/aio-libs/sockjs
+.. image:: https://travis-ci.com/aio-libs/sockjs.svg?branch=master
+    :target: https://travis-ci.com/aio-libs/sockjs
 
 `sockjs` is a `SockJS <http://sockjs.org>`_ integration for
 `aiohttp <https://github.com/aio-libs/aiohttp/>`_.  SockJS interface
@@ -23,40 +23,31 @@ Simple aiohttp web server is required::
 Example of sockjs route::
 
    def main(global_settings, **settings):
-       app = web.Application(loop=loop)
+       app = web.Application()
        app.router.add_route('GET', '/', index)
        sockjs.add_endpoint(app, prefix='/sockjs', handler=chatSession)
-
-       handler = app.make_handler()
-       srv = loop.run_until_complete(
-           loop.create_server(handler, '127.0.0.1', 8080))
-       print("Server started at http://127.0.0.1:8080")
-       try:
-           loop.run_forever()
-        except KeyboardInterrupt:
-           srv.close()
-           loop.run_until_complete(handler.finish_connections())
-
+       web.run_app(app)
 
 Client side code::
 
-  <script src="//cdn.jsdelivr.net/sockjs/0.3.4/sockjs.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
   <script>
-      var sock = new SockJS('http://localhost:8080/sockjs');
+    var sock = new SockJS('http://localhost:8080/sockjs');
 
-      sock.onopen = function() {
-        console.log('open');
-      };
+    sock.onopen = function() {
+      console.log('open');
+      sock.send('test');
+    };
 
-      sock.onmessage = function(obj) {
-        console.log(obj);
-      };
+    sock.onmessage = function(e) {
+      console.log('message', e.data);
+      sock.close();
+    };
 
-      sock.onclose = function() {
-        console.log('close');
-      };
+    sock.onclose = function() {
+      console.log('close');
+    };
   </script>
-
 
 Supported transports
 --------------------
@@ -82,7 +73,7 @@ Supported transports
 Requirements
 ------------
 
-- Python 3.4
+- Python 3.5.3
 
 - gunicorn 19.2.0
 

@@ -2,6 +2,17 @@
 CHANGES
 =======
 
+0.11.0 (2020-10-22)
+-------------------
+
+- **Breaking change:** Added into the WebSocketTransport the ability
+  to process multi messages from client (#383).
+- Added into WebSocketTransport ignoring of empty frames received
+  from client. (#383).
+- Added tick after dequeue so heartbeat keeps session live (#265).
+- Fix race condition during iteration over sessions (#217).
+- Support Python 3.8.
+- Fixed examples of using of SockJS server (#264).
 
 0.10.0 (2019-10-20)
 -------------------
